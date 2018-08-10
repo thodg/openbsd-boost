@@ -59,7 +59,7 @@ PERMIT_PACKAGE_CDROM=	Yes
 
 WANTLIB += ${COMPILER_LIBCXX} bz2 c iconv m z
 
-COMPILER= ports-gcc
+COMPILER= base-clang ports-gcc
 
 MODULES=	lang/python
 MODPY_RUNDEP=	No
@@ -73,9 +73,15 @@ LIB_DEPENDS=	archivers/bzip2 \
 
 .include <bsd.port.arch.mk>
 
-TOOLSET = egcc
+TOOLSET = clang
 
-MAKE_ENV=	GCC=egcc GXX=eg++
+.if ${PROPERTIES:Mclang}
+TOOLSET=	clang
+.else
+TOOLSET=	gcc
+.endif
+
+MAKE_ENV=	GCC="${CC}" GXX="${CXX}"
 
 BJAM_CONFIG=	-sICONV_PATH=${LOCALBASE} \
 		-sBZIP2_INCLUDE=${LOCALBASE}/include \
